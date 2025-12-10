@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# AutoGluon Models (large files)
+models/autogluon_models/
+models/best_model/
+
+# Data files (large CSVs)
+data/*.csv
+
+# Logs
+*.log
+nohup.out
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+_temp_*
+*.tmp
+
+# Keep structure but ignore large files
+!data/.gitkeep
+!models/.gitkeep
+!monitoring/reports/.gitkeep
+

@@ -1,0 +1,11 @@
+datasets
+pandas
+numpy
+scipy
+scikit-learn
+mlflow
+autogluon.tabular
+flask
+requests
+openpyxl
+
