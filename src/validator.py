@@ -43,27 +43,32 @@ class ModelValidator:
     
     def predict(self, X):
         """Make predictions using deployed model"""
-        # Convert to list of dicts
         instances = X.to_dict(orient='records')
         
-        # Send request
-        response = requests.post(
-            f"{self.server_url}/predict",
-            json={'instances': instances},
-            timeout=30
-        )
+        print(f"Making prediction request to {self.server_url}/predict")
+        print(f"Sending {len(instances)} instances")
         
-        if response.status_code != 200:
-            raise Exception(f"Prediction failed: {response.text}")
-        
-        result = response.json()
-        predictions = result['predictions']
-        
-        # Extract predictions and probabilities
-        y_pred = [p['prediction'] for p in predictions]
-        y_proba = [p['probability_class_1'] for p in predictions]
-        
-        return np.array(y_pred), np.array(y_proba)
+        try:
+            response = requests.post(
+                f"{self.server_url}/predict",
+                json={'instances': instances},
+                timeout=30
+            )
+            
+            if response.status_code != 200:
+                print(f"ERROR: Status code {response.status_code}")
+                print(f"Response: {response.text[:500]}")
+                raise Exception(f"Prediction failed (status {response.status_code}): {response.text[:200]}")
+            
+            result = response.json()
+            predictions = result['predictions']
+            y_pred = [p['prediction'] for p in predictions]
+            y_proba = [p['probability_class_1'] for p in predictions]
+            
+            return np.array(y_pred), np.array(y_proba)
+        except requests.exceptions.RequestException as e:
+            print(f"ERROR: Request failed - {e}")
+            raise
     
     def evaluate(self, X, y_true, dataset_name='Test'):
         """Evaluate model on dataset"""
@@ -71,10 +76,8 @@ class ModelValidator:
         print(f"EVALUATING ON {dataset_name.upper()} DATA")
         print(f"{'='*60}")
         
-        # Make predictions
+
         y_pred, y_proba = self.predict(X)
-        
-        # Calculate metrics
         metrics = {
             'accuracy': accuracy_score(y_true, y_pred),
             'precision': precision_score(y_true, y_pred, zero_division=0),
@@ -83,7 +86,6 @@ class ModelValidator:
             'roc_auc': roc_auc_score(y_true, y_proba)
         }
         
-        # Print metrics
         print(f"\nMetrics:")
         for metric, value in metrics.items():
             print(f"  {metric}: {value:.4f}")
@@ -104,7 +106,6 @@ class ModelValidator:
         
         X_modified = X.copy()
         
-        # Select random features to modify
         features = X.columns.tolist()
         np.random.seed(42)
         features_to_modify = np.random.choice(features, n_features_to_modify, replace=False)
@@ -114,7 +115,6 @@ class ModelValidator:
         for feature in features_to_modify:
             original_values = X_modified[feature].values
             
-            # Shuffle the values (swap between samples)
             shuffled_indices = np.random.permutation(len(original_values))
             X_modified[feature] = original_values[shuffled_indices]
             

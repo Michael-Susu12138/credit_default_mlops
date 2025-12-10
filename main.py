@@ -200,27 +200,63 @@ class MLOpsPipeline:
         """Start the model server in background"""
         print("Starting model server in background...")
         
+        # Kill any existing server on the port
+        try:
+            import subprocess
+            subprocess.run(
+                f"lsof -ti:{self.config.SERVER_PORT} | xargs kill -9",
+                shell=True,
+                stderr=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL
+            )
+            time.sleep(2)
+        except:
+            pass
+        
         # Create a simple server script
         server_script = os.path.join(os.path.dirname(__file__), '_temp_server.py')
         with open(server_script, 'w') as f:
             f.write('''
 import sys
+import os
+import warnings
+warnings.filterwarnings('ignore')
+
 sys.path.insert(0, '/home/ubuntu/mlops_final')
+os.chdir('/home/ubuntu/mlops_final')
+
 from config import Config
 from src.model_server import ModelServer
-server = ModelServer(Config())
+
+print("Initializing server...")
+config = Config()
+server = ModelServer(config)
+print("Loading model...")
+server.load_model()
+print("Starting Flask server...")
 server.run()
 ''')
         
-        # Start server in subprocess
-        process = subprocess.Popen(
-            [sys.executable, server_script],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=os.path.dirname(__file__)
-        )
+        # Create log file for debugging
+        log_file = os.path.join(os.path.dirname(__file__), 'server.log')
         
-        time.sleep(10)  # Give server more time to load large AutoGluon model
+        # Start server in subprocess with output logging
+        with open(log_file, 'w') as log:
+            process = subprocess.Popen(
+                [sys.executable, server_script],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                cwd=os.path.dirname(__file__)
+            )
+        
+        time.sleep(15)  # Give server more time to load large AutoGluon model
+        
+        # Check if process is still alive
+        if process.poll() is not None:
+            print("ERROR: Server process died! Check server.log for details")
+            with open(log_file, 'r') as log:
+                print(log.read())
+            raise RuntimeError("Server failed to start")
         
         return process
     
