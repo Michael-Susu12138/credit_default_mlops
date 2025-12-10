@@ -14,7 +14,7 @@ python main.py
 
 ## What This Pipeline Does
 
-### ✅ 1. Dataset with Outcome Variable
+###  1. Dataset with Outcome Variable
 - **Dataset**: UCI Credit Card Default Clients from HuggingFace
 - **Source**: `scikit-learn/credit-card-clients`
 - **Size**: 30,000 credit card clients
@@ -29,13 +29,13 @@ python main.py
 - `BILL_AMT1` to `BILL_AMT6`: Bill amounts (6 months)
 - `PAY_AMT1` to `PAY_AMT6`: Payment amounts (6 months)
 
-### ✅ 2. Train/Test Split
+###  2. Train/Test Split
 - **Train**: 24,000 samples (80%)
 - **Test**: 6,000 samples (20%)
 - **Method**: Stratified split (maintains class distribution)
 - **Random State**: 42 (reproducible)
 
-### ✅ 3. Evaluation Metrics
+###  3. Evaluation Metrics
 Five metrics are defined and calculated:
 - **Accuracy**: Overall correctness
 - **Precision**: True positives / (True positives + False positives)
@@ -45,7 +45,7 @@ Five metrics are defined and calculated:
 
 **Why F1 Score**: Best for imbalanced datasets like credit default
 
-### ✅ 4. AutoML Pipeline with MLflow
+###  4. AutoML Pipeline with MLflow
 - **AutoML Framework**: **AutoGluon 1.4.0**
 - **Pipeline Platform**: **MLflow** for experiment tracking
 - **Training Time**: ~5 minutes (300 seconds)
@@ -72,7 +72,7 @@ Five metrics are defined and calculated:
 - Automatic hyperparameter tuning
 - Dynamic threshold calibration (0.5 → 0.31)
 
-### ✅ 5. Model Deployment
+###  5. Model Deployment
 - **Type**: Flask REST API
 - **Host**: localhost:5000
 - **Endpoints**:
@@ -82,7 +82,7 @@ Five metrics are defined and calculated:
 
 **Model Loaded**: AutoGluon TabularPredictor with 13 ensemble models
 
-### ✅ 6. Model Monitoring
+###  6. Model Monitoring
 - **Method**: Statistical drift detection (Kolmogorov-Smirnov test)
 - **Threshold**: p-value < 0.05
 - **Reports**: HTML + JSON in `monitoring/reports/`
@@ -94,7 +94,7 @@ Five metrics are defined and calculated:
 - Statistical significance (KS statistic, p-value)
 - Color-coded visualization (red = drift, green = OK)
 
-### ✅ 7. Original Test Data Validation
+###  7. Original Test Data Validation
 Pipeline automatically:
 1. Loads test data (6,000 samples)
 2. Sends to deployed API via HTTP POST
@@ -107,7 +107,7 @@ Pipeline automatically:
 - F1 Score: ~0.53
 - ROC-AUC: ~0.77
 
-### ✅ 8. Modified Data Testing (2 Features Changed)
+###  8. Modified Data Testing (2 Features Changed)
 Pipeline automatically:
 1. Selects 2 random features
 2. Shuffles their values (swaps between samples)
@@ -120,7 +120,7 @@ Pipeline automatically:
 - Performance degradation: 2-5% drop in metrics
 - Drift detection: Should identify distribution changes
 
-### ✅ 9. Monitoring Verification
+###  9. Monitoring Verification
 The drift detection system will:
 - Compare original vs modified data distributions
 - Flag features with p-value < 0.05
@@ -274,19 +274,19 @@ monitoring = MonitoringManager(Config())
 
 ---
 
-## Success Criteria - All Met ✓
+## Success Criteria - All Met 
 
-| # | Requirement | Status | Evidence |
-|---|-------------|--------|----------|
-| 1 | Dataset with outcome variable | ✅ | `default.payment.next.month` (binary 0/1) |
-| 2 | Train/test split | ✅ | 24,000 / 6,000 (80/20 stratified) |
-| 3 | Evaluation metrics | ✅ | 5 metrics: Acc, Prec, Rec, F1, ROC-AUC |
-| 4 | MLflow pipeline + AutoML | ✅ | MLflow tracks, AutoGluon trains 13 models |
-| 5 | Deploy for inference | ✅ | Flask REST API on localhost:5000 |
-| 6 | Model monitoring + dashboard | ✅ | KS-test drift detection + HTML reports |
-| 7 | Test with deployed model | ✅ | API predictions + metrics calculation |
-| 8 | Change 2 features | ✅ | Random shuffling of 2 features |
-| 9 | Verify modified data monitoring | ✅ | Drift detection + performance comparison |
+| # | Requirement | Proof of Action |
+|---|-------------|----------|
+| 1 | Dataset with outcome variable   | `default.payment.next.month` (binary 0/1) |
+| 2 | Train/test split |   24,000 / 6,000 (80/20 stratified) |
+| 3 | Evaluation metrics |   5 metrics: Acc, Prec, Rec, F1, ROC-AUC |
+| 4 | MLflow pipeline + AutoML |   MLflow tracks, AutoGluon trains 13 models |
+| 5 | Deploy for inference |   Flask REST API on localhost:5000 |
+| 6 | Model monitoring + dashboard |   KS-test drift detection + HTML reports |
+| 7 | Test with deployed model |   API predictions + metrics calculation |
+| 8 | Change 2 features |   Random shuffling of 2 features |
+| 9 | Verify modified data monitoring |   Drift detection + performance comparison |
 
 ---
 
@@ -374,7 +374,7 @@ mlops_final/
 MLOPS PIPELINE - CREDIT CARD DEFAULT PREDICTION
 ============================================================
 
-✓ MODEL ALREADY TRAINED - SKIPPING TRAINING
+ MODEL ALREADY TRAINED - SKIPPING TRAINING
   Loading existing model and data...
 
 [STEP 1] Loading existing data...
@@ -411,7 +411,7 @@ DRIFT DETECTION SUMMARY
 Dataset Drift Detected: True
 Drifted Features: PAY_AMT3, BILL_AMT4
 
-✓ All pipeline steps completed successfully!
+ All pipeline steps completed successfully!
 ```
 
 ---
@@ -494,14 +494,14 @@ predictions = predictor.predict(test_df)
 
 ## Summary
 
-✅ **Real UCI dataset** (30K credit card clients)  
-✅ **AutoGluon AutoML** (13 models trained)  
-✅ **MLflow tracking** (all experiments logged)  
-✅ **Flask deployment** (REST API serving)  
-✅ **Drift monitoring** (statistical detection + dashboards)  
-✅ **Complete validation** (original + modified data)  
-✅ **OOP design** (clean, maintainable code)  
-✅ **Production-ready** (all requirements met)
+ **Real UCI dataset** (30K credit card clients)  
+ **AutoGluon AutoML** (13 models trained)  
+ **MLflow tracking** (all experiments logged)  
+ **Flask deployment** (REST API serving)  
+ **Drift monitoring** (statistical detection + dashboards)  
+ **Complete validation** (original + modified data)  
+ **OOP design** (clean, maintainable code)  
+ **Production-ready** (all requirements met)
 
 **Performance**: 79.4% accuracy, 0.53 F1 score - **excellent for this dataset!**
 
